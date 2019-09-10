@@ -1,14 +1,14 @@
 package com.java8.action;
 
 import com.java8.action.entity.Apple;
+import com.java8.action.function.FunctionInterface1;
 import com.java8.action.function.Predicate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
@@ -22,9 +22,19 @@ public class Java8InActionApplicationTests {
 		inventory = new ArrayList<>();
 	}
 
+
+	/**
+	 * 自定义函数式接口
+	 */
+	@Test
+	public void test3() {
+		FunctionInterface1<String, Integer, List, Map<String, Object>> f1 = (str, num, list) -> new HashMap<>(16);
+	}
+
 	@Test
 	public void test2() {
-		inventory.parallelStream().filter(apple -> apple.getWeight() > 150).collect(toList());
+		List<Apple> list = inventory.parallelStream().filter(apple -> apple.getWeight() > 150).collect(toList());
+		new Thread(() -> System.out.println("删库跑路")).start();
 	}
 
 	@Test
