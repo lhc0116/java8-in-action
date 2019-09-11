@@ -4,7 +4,7 @@
   - 行为参数化，就是一个方法接受多个不同的行为作为参数，并在内部使用他们，完成不同行为的能力。
   - 在java8之前，要将一段代码作为参数传递给方法，可以使用匿名类的方式来减少代码的冗余。
 ### 第三章
-  - Lambda表达式的基本语法是
+  - Lambda表达式的基本语法是:   (参数列表) -> 主体
     - (parameters) -> expression
     - (parameters) -> {statements;}
   - 函数式接口就是一个`有且仅有一个抽象方法`，但是可以有多个非抽象方法(静态方法和default关键字修饰的默认方法)的接口。
@@ -12,5 +12,6 @@
   - Lambda表达式允许你直接以内联的形式为函数式接口的抽象方法提供实现，并把整个表达式作为函数式接口的实例(具体的说，是函数式接口的一个具体实现的实例)。
   - Lambda表达式可以被赋给一个变量，也可以作为参数传递给一个接受函数式接口作为入参的方法。
   - @FunctionalInterface 注解用于标注接口会被设计成一个函数式接口，虽然他不是必须的，但是推荐使用，这样会在编译期检查使用 @FunctionalInterface 接口是否是一个函数式接口。
-  - 关于Java8新引入的几个常用的函数式接口 Predicate、Consumer、Function
-  - 
+  - 关于Java8新引入的几个常用的泛型函数式接口 Predicate、Consumer、Function
+  - 如果一个Lambda的主体是一个表达式，它就和一个返回 void 的函数描述符(即函数式接口的抽象方法签名, 例如 `(T, U) -> R`)兼容。下面这个语句是合法的，虽然Lambda主体返回的是List<String>，而不是Consumer上下文要求的 void。
+    > Consumer<String> c = s -> Arrays.asList(s);
