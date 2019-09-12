@@ -14,4 +14,6 @@
   - @FunctionalInterface 注解用于标注接口会被设计成一个函数式接口，虽然他不是必须的，但是推荐使用，这样会在编译期检查使用 @FunctionalInterface 接口是否是一个函数式接口。
   - 关于Java8新引入的几个常用的泛型函数式接口 Predicate、Consumer、Function
   - 如果一个Lambda的主体是一个表达式，它就和一个返回 void 的函数描述符(即函数式接口的抽象方法签名, 例如 `(T, U) -> R`)兼容。下面这个语句是合法的，虽然Lambda主体返回的是List<String>，而不是Consumer上下文要求的 void。
-    > Consumer<String> c = s -> Arrays.asList(s);
+  ```java
+     Consumer<String> c = s -> Arrays.asList(s);
+  ```
