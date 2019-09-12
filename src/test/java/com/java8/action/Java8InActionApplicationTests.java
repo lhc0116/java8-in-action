@@ -20,94 +20,135 @@ import static java.util.stream.Collectors.toList;
 @SpringBootTest
 public class Java8InActionApplicationTests {
 
-	static List<Apple> inventory;
-
-	static {
-		inventory = new ArrayList<>();
-	}
 
 
-	/**
-	 * 只要Lambda表达式和函数式接口的抽象方法签名(及函数描述符)相同，则同一个Lambda表达式可以与多个不同的函数式接口联系起来
-	 */
-	@Test
-	public void test7() {
-		Comparator<Apple> c1 = (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
-		ToIntBiFunction<Apple, Apple> c2 = (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
-		BiFunction<Apple, Apple, Integer> c3 = (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
-	}
+    static List<Apple> inventory;
 
-	/**
-	 * 使用IntPredicate避免自动装箱，提高性能
-	 */
-	@Test
-	public void test6() {
-		IntPredicate intPredicate = (int i) -> i % 2 == 1;
-		intPredicate.test(1000);
-		Predicate<Integer> predicate = (Integer i) -> i % 2 == 1;
-		predicate.test(1000);
-	}
+    static {
+        inventory = new ArrayList<>();
+    }
 
-	/**
-	 * 关于Function接口
-	 */
-	@Test
-	public void test5() {
-		List<Integer> lengths = this.map(Arrays.asList("黄蓉", "张三丰", "测试"), str -> str.length());
-	}
 
-	public <T, R> List<R> map(List<T> list, Function<T, R> f) {
-		List<R> result = new ArrayList<>();
-		list.forEach(i -> result.add(f.apply(i)));
-		return result;
-	}
+    /**
+     * 重构
+     * Lambda表达式-----》等价的方法引用
+     */
+    @Test
+    public void test10() {
+        Consumer<String> c1 = i -> this.run(i);
+        //上面的Lambda表达式可以简写成下面的方法引用，符合方法引用的第三类方式, this引用即所谓的外部对象
+        Consumer<String> c2 = this::run;
+    }
 
-	@Test
-	public void test4() throws IOException {
-		String result = processFile(br -> br.readLine() + br.readLine());
-	}
+    public void run(String s) {}
 
-	public String processFile(BufferedReaderProcessor brp) throws IOException {
-		try (BufferedReader bufferedReader = new BufferedReader(new FileReader("data.txt"))) {
-			return brp.process(bufferedReader);
-		}
-	}
+    /**
+     * 第一次测试方法引用
+     */
+    @Test
+    public void test9() {
+        List<String> list = Arrays.asList("a", "b", "A", "B");
+        list.sort((s1, s2) -> s1.compareToIgnoreCase(s2));
+        //上面这个Lambda表达式转变成更简洁的方法引用
+        list.sort(String::compareToIgnoreCase);
+    }
 
-	@FunctionalInterface
-	public interface BufferedReaderProcessor {
-		String process(BufferedReader br) throws IOException;
-	}
+    String s1 = "";
+    static String s2 = "";
 
-	public Callable<String> fetch() {
-		return () -> "测试Lambda表达式";
-	}
+    /**
+     * Lambda表达式可以没有限制的在其主体中引用实例变量和静态变量，但如果是局部变量，则必须显式的声明为final或只能被赋值一次，才能在Lambda主体中被引用
+     */
+    @Test
+    public void test8() {
+        String str = "ceshi";
+        //str = "瑟瑟发抖";
+        new Thread(() -> System.out.println(str)).start();
+        s1 = "实例变量";
+        s2 = "静态变量";
+    }
 
-	/**
-	 * 自定义函数式接口
-	 */
-	@Test
-	public void test3() {
-		FunctionInterface1<String, Integer, List, Map<String, Object>> f1 = (str, num, list) -> new HashMap<>(16);
-	}
+    /**
+     * 只要Lambda表达式和函数式接口的抽象方法签名(及函数描述符)相同，则同一个Lambda表达式可以与多个不同的函数式接口联系起来
+     */
+    @Test
+    public void test7() {
+        Comparator<Apple> c1 = (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
+        ToIntBiFunction<Apple, Apple> c2 = (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
+        BiFunction<Apple, Apple, Integer> c3 = (a1, a2) -> a1.getWeight().compareTo(a2.getWeight());
+    }
 
-	@Test
-	public void test2() {
-		List<Apple> list = inventory.parallelStream().filter(apple -> apple.getWeight() > 150).collect(toList());
-		new Thread(() -> System.out.println("删库跑路")).start();
-	}
+    /**
+     * 使用IntPredicate避免自动装箱，提高性能
+     */
+    @Test
+    public void test6() {
+        IntPredicate intPredicate = (int i) -> i % 2 == 1;
+        intPredicate.test(1000);
+        Predicate<Integer> predicate = (Integer i) -> i % 2 == 1;
+        predicate.test(1000);
+    }
 
-	@Test
-	public void test1() {
-		this.filterApples(inventory, apple -> "green".equals(apple.getColor()));
-	}
+    /**
+     * 关于Function接口
+     */
+    @Test
+    public void test5() {
+        List<Integer> lengths = this.map(Arrays.asList("黄蓉", "张三丰", "测试"), str -> str.length());
+    }
 
-	public List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> predicate) {
-		List<Apple> result = new ArrayList<>();
-		inventory.forEach(apple -> {
-			if (predicate.test(apple)) {
-				result.add(apple);
-			}
-		});
-		return result;
-	}
+    public <T, R> List<R> map(List<T> list, Function<T, R> f) {
+        List<R> result = new ArrayList<>();
+        list.forEach(i -> result.add(f.apply(i)));
+        return result;
+    }
+
+    @Test
+    public void test4() throws IOException {
+        String result = processFile(br -> br.readLine() + br.readLine());
+    }
+
+    public String processFile(BufferedReaderProcessor brp) throws IOException {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("data.txt"))) {
+            return brp.process(bufferedReader);
+        }
+    }
+
+    @FunctionalInterface
+    public interface BufferedReaderProcessor {
+        String process(BufferedReader br) throws IOException;
+    }
+
+    public Callable<String> fetch() {
+        return () -> "测试Lambda表达式";
+    }
+
+    /**
+     * 自定义函数式接口
+     */
+    @Test
+    public void test3() {
+        FunctionInterface1<String, Integer, List, Map<String, Object>> f1 = (str, num, list) -> new HashMap<>(16);
+    }
+
+    @Test
+    public void test2() {
+        List<Apple> list = inventory.parallelStream().filter(apple -> apple.getWeight() > 150).collect(toList());
+        new Thread(() -> System.out.println("删库跑路")).start();
+    }
+
+    @Test
+    public void test1() {
+        this.filterApples(inventory, apple -> "green".equals(apple.getColor()));
+    }
+
+    public List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> predicate) {
+        List<Apple> result = new ArrayList<>();
+        inventory.forEach(apple -> {
+            if (predicate.test(apple)) {
+                result.add(apple);
+            }
+        });
+        return result;
+    }
 }

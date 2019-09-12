@@ -1,9 +1,9 @@
-### 第一掌
+### chapter 1
   - 函数式编程的两个核心思想：将方法和Lambda作为一等值,以及在没有可变共享状态时,函数或方法可以有效、安全的并行执行。
-### 第二章
+### chapter 2
   - 行为参数化，就是一个方法接受多个不同的行为作为参数，并在内部使用他们，完成不同行为的能力。
   - 在java8之前，要将一段代码作为参数传递给方法，可以使用匿名类的方式来减少代码的冗余。
-### 第三章
+### chapter 3
   - Lambda表达式的基本语法是:   (参数列表) -> 主体
     - (parameters) -> expression
     - (parameters) -> {statements;}
@@ -17,3 +17,19 @@
   ```java
      Consumer<String> c = s -> Arrays.asList(s);
   ```
+  - Lambda表达式可以没有限制的在其主体中引用实例变量和静态变量，但如果是局部变量，则必须显式的声明为final或只能被赋值一次，才能在Lambda主体中被引用。
+  - 方法引用主要有三类
+    1. 指向静态方法的方法引用，例如 `s -> String.valueOf(s)` 可简写成 `String::valueOf`
+    2. 指向任意类型的实例方法的方法引用，例如 `(String s) -> s.length()` 可简写成 `String::length` (简单的说，就是你在引用一个对象的方法，而这个对象本身是Lambda的一个入参)
+    3. 指向Lambda表达式外部的已经存在的对象的实例方法的方法引用，下面的示例很好的展示了如何将 Lambda 重构成对应的方法引用
+  ```java
+        @Test
+        public void test10() {
+            Consumer<String> c1 = i -> this.run(i);
+            //上面的Lambda表达式可以简写成下面的方法引用，符合方法引用的第三类方式, this引用即所谓的外部对象
+            Consumer<String> c2 = this::run;
+        }
+        
+        public void run(String s) {}
+  ```
+  
