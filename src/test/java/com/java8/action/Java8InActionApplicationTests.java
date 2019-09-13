@@ -28,6 +28,35 @@ public class Java8InActionApplicationTests {
         inventory = new ArrayList<>();
     }
 
+    @Test
+    public void test13() {
+
+    }
+
+    /**
+     * 假设需要对一个List集合进行不同规则的排序，我们可以有多种实现方式
+     * <P>下面这段代码是经过重构后的最终代码，它经历了 使用函数式接口的实例--》使用匿名类--》使用Lambda表达式--》使用方法引用 的逐步简化过程</P>
+     */
+    @Test
+    public void test12() {
+        inventory.sort(Comparator.comparing(Apple::getWeight));
+    }
+
+    /**
+     * 关于构造函数的 Lambda表达式---》方法引用 之间的转换
+     */
+    @Test
+    public void test11() {
+        //1.无参构造
+        Supplier<Apple> c1 = () -> new Apple();
+        Supplier<Apple> c2 = Apple::new;
+        Apple a1 = c2.get();
+
+        //有参构造
+        BiFunction<String, Integer, Apple> f1 = (color, weight) -> new Apple(color, weight);//Lambda表达式
+        BiFunction<String, Integer, Apple> f2 = Apple::new;//构造函数引用
+        Apple a2 = f2.apply("red", 10);
+    }
 
     /**
      * 重构

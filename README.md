@@ -33,4 +33,15 @@
         public void run(String s) {}
   ```
   ![如何将Lambda表达式重构为等价的方法引用](images/method_reference.png)
-  
+  - 关于构造函数引用，下面展示了一个简单易懂的栗子
+  ```java
+    //1.无参构造
+    Supplier<Apple> c1 = () -> new Apple();
+    Supplier<Apple> c2 = Apple::new;
+    Apple a1 = c2.get();
+    //有参构造
+    BiFunction<String, Integer, Apple> f1 = (color, weight) -> new Apple(color, weight);//Lambda表达式
+    BiFunction<String, Integer, Apple> f2 = Apple::new;//构造函数引用
+    Apple a2 = f2.apply("red", 10);
+  ```
+  - 
