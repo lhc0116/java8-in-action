@@ -1,4 +1,5 @@
 HELP.md
+翻译历史记录.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
