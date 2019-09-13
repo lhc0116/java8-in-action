@@ -32,5 +32,5 @@
         
         public void run(String s) {}
   ```
-  ![ceshi](images/method_reference.png)
+  ![如何将Lambda表达式重构为等价的方法引用](images/method_reference.png)
   
