@@ -21,16 +21,72 @@ import static java.util.stream.Collectors.toList;
 public class Java8InActionApplicationTests {
 
 
-
     static List<Apple> inventory;
+    static List<Integer> nums;
 
     static {
         inventory = new ArrayList<>();
+        inventory.add(new Apple("red", 94));
+        inventory.add(new Apple("green", 100));
+        inventory.add(new Apple("yellow", 65));
+        inventory.add(new Apple("blue", 19));
+        inventory.add(new Apple("green", 65));
+        inventory.add(new Apple("blue", 94));
+
+        nums = new ArrayList<>();
+        nums.add(89);
+        nums.add(100);
+        nums.add(45);
+        nums.add(23);
     }
 
     @Test
-    public void test13() {
+    public void test16() {
 
+    }
+
+    /**
+     * 函数的组合用法
+     */
+    @Test
+    public void test15() {
+        Function<String, Integer> f = i -> Integer.valueOf(i);//方法引用写法: Integer::valueOf
+        Function<Integer, Apple> g = weight -> new Apple(weight); //构造函数引用写法: Apple::new
+        Function<String, Apple> h = f.andThen(g); // andThen()相当于数学上的 g(f(x)) 函数
+        Apple apple = h.apply("99"); //result: Apple(color=null, weight=99)
+
+        Function<Apple, String> y = Apple::getColor;
+        Function<Apple, Integer> z = f.compose(y); // compose()相当于数学上的 f(y(x)) 函数
+        Integer result = z.apply(new Apple("red", 78));//会报 java.lang.NumberFormatException: For input string: "red" 异常
+    }
+
+    /**
+     * 谓词的组合用法
+     * and和or方法是按照在表达式链中的位置，从左到右确定优先级的，如a.or(b).and(c).or(d) 可以看成 ((a || b) && c) || d
+     */
+    @Test
+    public void test14() {
+        Predicate<Apple> p1 = apple -> "green".equals(apple.getColor());
+        final Predicate<Apple> negate = p1.negate(); //非
+        System.out.println(negate.test(new Apple("green", 98)));// result: false
+
+        final Predicate<Apple> and = p1.and(apple -> apple.getWeight() > 150);//与
+        System.out.println(and.test(new Apple("green", 140)));//result: false
+
+        final Predicate<Apple> or = p1.or(apple -> apple.getWeight() > 150);//或
+        System.out.println(or.test(new Apple("blue", 170)));//result: true
+    }
+
+    /**
+     * 比较器组合的用法
+     */
+    @Test
+    public void test13() {
+        inventory.sort(Comparator.comparing(Apple::getWeight).reversed());//苹果按重量倒序排序
+        System.out.println(inventory);
+        //苹果按重量倒序排序，当苹果重量相同时，按颜色升序排序
+        inventory.sort(Comparator.comparing(Apple::getWeight).reversed().thenComparing(Apple::getColor));
+        System.out.println(inventory);
     }
 
     /**
@@ -69,7 +125,8 @@ public class Java8InActionApplicationTests {
         Consumer<String> c2 = this::run;
     }
 
-    public void run(String s) {}
+    public void run(String s) {
+    }
 
     /**
      * 第一次测试方法引用

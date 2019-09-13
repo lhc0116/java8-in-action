@@ -4,7 +4,7 @@
   - 行为参数化，就是一个方法接受多个不同的行为作为参数，并在内部使用他们，完成不同行为的能力。
   - 在java8之前，要将一段代码作为参数传递给方法，可以使用匿名类的方式来减少代码的冗余。
 ### chapter 3
-  - Lambda表达式的基本语法是:   (参数列表) -> 主体
+  - Lambda表达式的基本语法是:   (参数列表) -> 函数主体
     - (parameters) -> expression
     - (parameters) -> {statements;}
   - 函数式接口就是一个`有且仅有一个抽象方法`，但是可以有多个非抽象方法(静态方法和default关键字修饰的默认方法)的接口。
@@ -35,7 +35,7 @@
   ![如何将Lambda表达式重构为等价的方法引用](images/method_reference.png)
   - 关于构造函数引用，下面展示了一个简单易懂的栗子
   ```java
-    //1.无参构造
+    //无参构造
     Supplier<Apple> c1 = () -> new Apple();
     Supplier<Apple> c2 = Apple::new;
     Apple a1 = c2.get();
@@ -44,4 +44,52 @@
     BiFunction<String, Integer, Apple> f2 = Apple::new;//构造函数引用
     Apple a2 = f2.apply("red", 10);
   ```
-  - 
+  - 关于 Comparator比较器、Predicate谓词、Function函数的组合用法
+  ```java
+    /**
+    * 函数的组合用法
+    */
+    @Test
+    public void test15() {
+      Function<String, Integer> f = i -> Integer.valueOf(i);//方法引用写法: Integer::valueOf
+      Function<Integer, Apple> g = weight -> new Apple(weight); //构造函数引用写法: Apple::new
+      Function<String, Apple> h = f.andThen(g); // andThen()相当于数学上的 g(f(x)) 函数
+      Apple apple = h.apply("99"); //result: Apple(color=null, weight=99)
+    
+      Function<Apple, String> y = Apple::getColor;
+      Function<Apple, Integer> z = f.compose(y); // compose()相当于数学上的 f(y(x)) 函数
+      Integer result = z.apply(new Apple("red", 78));//会报 java.lang.NumberFormatException: For input string: "red" 异常
+    }
+    
+    /**
+    * 谓词的组合用法
+    * and和or方法是按照在表达式链中的位置，从左到右确定优先级的，如a.or(b).and(c).or(d) 可以看成 ((a || b) && c) || d
+    */
+    @Test
+    public void test14() {
+      Predicate<Apple> p1 = apple -> "green".equals(apple.getColor());
+      final Predicate<Apple> negate = p1.negate(); //非
+      System.out.println(negate.test(new Apple("green", 98)));// result: false
+    
+      final Predicate<Apple> and = p1.and(apple -> apple.getWeight() > 150);//与
+      System.out.println(and.test(new Apple("green", 140)));//result: false
+    
+      final Predicate<Apple> or = p1.or(apple -> apple.getWeight() > 150);//或
+      System.out.println(or.test(new Apple("blue", 170)));//result: true
+    }
+    
+    /**
+    * 比较器组合的用法
+    */
+    @Test
+    public void test13() {
+      inventory.sort(Comparator.comparing(Apple::getWeight).reversed());//苹果按重量倒序排序
+      System.out.println(inventory);
+      //苹果按重量倒序排序，当苹果重量相同时，按颜色升序排序
+      inventory.sort(Comparator.comparing(Apple::getWeight).reversed().thenComparing(Apple::getColor));
+      System.out.println(inventory);
+    }
+  ```
+  - 为了避免自动装箱操作，Java8对Predicate、Function、Supplier、Consumer等一些通用的函数式接口的原始类型进行了特化，例如: IntFunction
+### chapter 4
+  
