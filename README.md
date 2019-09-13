@@ -32,4 +32,5 @@
         
         public void run(String s) {}
   ```
+  ![ceshi](images/method_reference.png)
   
