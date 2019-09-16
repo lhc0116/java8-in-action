@@ -92,4 +92,7 @@
   ```
   - 为了避免自动装箱操作，Java8对Predicate、Function、Supplier、Consumer等一些通用的函数式接口的原始类型进行了特化，例如: IntFunction
 ### chapter 4
+  - 流使用内部迭代，同一个流只能被消费一次
+### chapter 5
+  - 
   

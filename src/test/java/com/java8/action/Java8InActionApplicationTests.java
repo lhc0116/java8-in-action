@@ -1,9 +1,11 @@
 package com.java8.action;
 
 import com.java8.action.entity.Apple;
+import com.java8.action.entity.Dish;
 import com.java8.action.function.FunctionInterface1;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.exceptions.misusing.NullInsteadOfMockException;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -13,6 +15,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -22,7 +26,7 @@ public class Java8InActionApplicationTests {
 
 
     static List<Apple> inventory;
-    static List<Integer> nums;
+    static List<Dish> menu;
 
     static {
         inventory = new ArrayList<>();
@@ -33,17 +37,38 @@ public class Java8InActionApplicationTests {
         inventory.add(new Apple("green", 65));
         inventory.add(new Apple("blue", 94));
 
-        nums = new ArrayList<>();
-        nums.add(89);
-        nums.add(100);
-        nums.add(45);
-        nums.add(23);
+        menu = Arrays.asList(
+                new Dish("pork", false, 800, Dish.Type.MEAT),
+                new Dish("beef", false, 700, Dish.Type.MEAT),
+                new Dish("chicken", false, 400, Dish.Type.MEAT),
+                new Dish("french fries", true, 530, Dish.Type.OTHER),
+                new Dish("rice", true, 350, Dish.Type.OTHER),
+                new Dish("season fruit", true, 120, Dish.Type.OTHER),
+                new Dish("pizza", true, 550, Dish.Type.OTHER),
+                new Dish("prawns", false, 300, Dish.Type.FISH),
+                new Dish("salmon", false, 450, Dish.Type.FISH));
     }
+
+    /*----------------------------------------chapter 5-------------------------------------------------*/
 
     @Test
-    public void test16() {
+    public void test17() {
 
     }
+
+    /*----------------------------------------chapter 4-------------------------------------------------*/
+
+    /**
+     * 同一个流只能被消费一次
+     */
+    @Test
+    public void test16() {
+        Stream<Dish> stream = menu.stream();
+        stream.forEach(System.out::println);
+        stream.forEach(System.out::println); //java.lang.IllegalStateException: stream has already been operated upon or closed
+    }
+
+    /*----------------------------------------chapter 3-------------------------------------------------*/
 
     /**
      * 函数的组合用法
