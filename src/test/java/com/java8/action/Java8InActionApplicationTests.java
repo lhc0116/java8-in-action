@@ -51,9 +51,35 @@ public class Java8InActionApplicationTests {
 
     /*----------------------------------------chapter 5-------------------------------------------------*/
 
+
+    @Test
+    public void test19() {
+        menu.stream()
+                .filter(Dish::isVegetarian)
+                .findAny()
+                .ifPresent(i -> System.out.println(i.getName()));//会在Optional包含值的时候执行给定的代码块
+    }
+
+    @Test
+    public void test18() {
+        List<String> words = Arrays.asList("hello", "world");
+        List<String> list = words.stream()
+                .map(i -> i.split(""))
+                .flatMap(Arrays::stream)//流扁平化，形成一个新的流
+                .distinct()
+                .collect(Collectors.toList());
+        System.out.println(list);
+    }
+
+    /**
+     * 获取每道菜的名称的长度
+     */
     @Test
     public void test17() {
-
+        List<Integer> list = menu.stream()
+                .map(Dish::getName)
+                .map(String::length)
+                .collect(Collectors.toList());
     }
 
     /*----------------------------------------chapter 4-------------------------------------------------*/
