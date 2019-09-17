@@ -2,10 +2,11 @@ package com.java8.action;
 
 import com.java8.action.entity.Apple;
 import com.java8.action.entity.Dish;
+import com.java8.action.entity.Trader;
+import com.java8.action.entity.Transaction;
 import com.java8.action.function.FunctionInterface1;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.exceptions.misusing.NullInsteadOfMockException;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,8 +23,7 @@ import static java.util.stream.Collectors.toList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Java8InActionApplicationTests {
-
+public class ChapterTest3 {
 
     static List<Apple> inventory;
     static List<Dish> menu;
@@ -48,53 +48,6 @@ public class Java8InActionApplicationTests {
                 new Dish("prawns", false, 300, Dish.Type.FISH),
                 new Dish("salmon", false, 450, Dish.Type.FISH));
     }
-
-    /*----------------------------------------chapter 5-------------------------------------------------*/
-
-
-    @Test
-    public void test19() {
-        menu.stream()
-                .filter(Dish::isVegetarian)
-                .findAny()
-                .ifPresent(i -> System.out.println(i.getName()));//会在Optional包含值的时候执行给定的代码块
-    }
-
-    @Test
-    public void test18() {
-        List<String> words = Arrays.asList("hello", "world");
-        List<String> list = words.stream()
-                .map(i -> i.split(""))
-                .flatMap(Arrays::stream)//流扁平化，形成一个新的流
-                .distinct()
-                .collect(Collectors.toList());
-        System.out.println(list);
-    }
-
-    /**
-     * 获取每道菜的名称的长度
-     */
-    @Test
-    public void test17() {
-        List<Integer> list = menu.stream()
-                .map(Dish::getName)
-                .map(String::length)
-                .collect(Collectors.toList());
-    }
-
-    /*----------------------------------------chapter 4-------------------------------------------------*/
-
-    /**
-     * 同一个流只能被消费一次
-     */
-    @Test
-    public void test16() {
-        Stream<Dish> stream = menu.stream();
-        stream.forEach(System.out::println);
-        stream.forEach(System.out::println); //java.lang.IllegalStateException: stream has already been operated upon or closed
-    }
-
-    /*----------------------------------------chapter 3-------------------------------------------------*/
 
     /**
      * 函数的组合用法
