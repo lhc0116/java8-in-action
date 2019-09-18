@@ -8,10 +8,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import javax.xml.crypto.dsig.TransformService;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RunWith(SpringRunner.class)
@@ -54,16 +52,22 @@ public class ChapterTest5 {
     @Test
     public void test21() {
         //(1) 找出2011年发生的所有交易,并按交易额排序(从低到高)。
-        List<Transaction> list1 = transactions.stream().filter(i -> 2011 == i.getYear()).sorted(Comparator.comparing(Transaction::getValue)).collect(Collectors.toList());
+        List<Transaction> list = transactions.stream().filter(i -> 2011 == i.getYear()).sorted(Comparator.comparing(Transaction::getValue)).collect(Collectors.toList());
         //(2) 交易员都在哪些不同的城市工作过?
-
+        Set<String> cities = transactions.stream().map(Transaction::getTrader).map(Trader::getCity).collect(Collectors.toSet());
         //(3) 查找所有来自于剑桥的交易员,并按姓名排序。
+        List<Trader> trades = transactions.stream().map(Transaction::getTrader).filter(i -> "Cambridge".equals(i.getCity())).distinct().sorted(Comparator.comparing(Trader::getName)).collect(Collectors.toList());
         //(4) 返回所有交易员的姓名字符串,按字母顺序排序。
+        String names = transactions.stream().map(Transaction::getTrader).distinct().map(Trader::getName).sorted().reduce("", (a, b) -> a + b);
         //(5) 有没有交易员是在米兰工作的?
-        //(6) 打印生活在剑桥的交易员的所有交易额。
+        boolean flag = transactions.stream().map(Transaction::getTrader).anyMatch(trader -> "Milan".equals(trader.getCity()));
+        //(6) 打印生活在剑桥的交易员的所有交易的总额。
+        Integer sum = transactions.stream().filter(i -> "Cambridge".equals(i.getTrader().getCity())).map(Transaction::getValue).reduce(0, Integer::sum);
         //(7) 所有交易中,最高的交易额是多少?
+        Integer max = transactions.stream().map(Transaction::getValue).reduce(0, Integer::max);
         //(8) 找到交易额最小的交易。
-        System.out.println(list1);
+        Optional<Transaction> first = transactions.stream().min(Comparator.comparingInt(Transaction::getValue));
+        System.out.println(first.get());
     }
 
     /**
