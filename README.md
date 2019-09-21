@@ -99,4 +99,29 @@
   - 流的归约操作-->reduce()方法
     > 所谓规约操作就是将流中所有元素反复结合起来, 最终得到一个值.
   - 原始类型流特化: IntStream, LongStream, DoubleStream的简单使用以及和Stream流之间的相互转换.
-  - 
+  - 构建流的几种方式
+    > 由集合创建流, 根据数值范围创建数值流, 由值创建流, 由数组创建流, 由文件生成流, 由函数生成无限流。
+  ```java
+    IntStream.rangeClosed(1, 100);//根据数值范围创建数值流
+    Stream<String> stream = Stream.of("java8", "盖聂", "少司命");//由值创建流
+    int sum = Arrays.stream(new int[]{1, 2, 3, 4}).sum();//由数组创建流
+    //由文件生成流 ===>下面示例Files.lines得到一个流,流中的每个元素对应文件中的一行
+    try (Stream<String> lines = Files.lines(Paths.get("1.txt"), Charset.defaultCharset())) {
+    long count = lines.flatMap(line -> Arrays.stream(line.split(" ")))
+            .distinct()
+            .count();
+    } catch (IOException ex) {
+    }
+    //由函数生成流: 创建无限流
+    Stream.iterate(0, n -> n + 1)
+        .limit(10)
+        .forEach(System.out::println);
+    Stream.iterate(new int[]{0, 1}, arr -> new int[]{arr[1], arr[0] + arr[1]}) //创建一个斐波纳契元祖序列
+        .limit(10)
+        .forEach(arr -> System.out.println("(" + arr[0] + ", " + arr[1] + ")"));
+    Stream.generate(Math::random)
+        .limit(5)
+        .forEach(System.out::println);
+  ```
+### chapter 6
+  - 测
