@@ -8,9 +8,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.xml.crypto.dsig.TransformService;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -48,6 +47,31 @@ public class ChapterTest5 {
         );
     }
 
+    @Test
+    public void test23() {
+
+    }
+
+    /**
+     * 原始类型流特化
+     * @see IntStream
+     * @see LongStream
+     * @see DoubleStream
+     */
+    @Test
+    public void test22() {
+        int calories = menu.stream().mapToInt(Dish::getCalories).sum(); //映射到数值流 mapToXxx
+        IntStream intStream = menu.stream().mapToInt(Dish::getCalories);
+        //转换回基本类型对应的对象流
+        Stream<Integer> stream = intStream.boxed(); //intStream.mapToObj(Integer::valueOf);
+        //默认值OptionalInt
+        List<Dish> list = new ArrayList<>();
+        OptionalInt optionalInt = list.stream().mapToInt(Dish::getCalories).max();
+        System.out.println(optionalInt.orElse(88)); //result: 88
+        // 数值范围
+        long count = IntStream.rangeClosed(1, 102).filter(i -> i % 3 == 0).count();
+        System.out.println(count);//result: 34
+    }
 
     @Test
     public void test21() {
