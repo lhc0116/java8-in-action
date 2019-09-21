@@ -124,4 +124,16 @@
         .forEach(System.out::println);
   ```
 ### chapter 6
-  - 测
+  - Collectors类中提供了一些静态工厂方法, 用于流的归约和汇总操作。下面是简单的示例, 类中已经导入了Collectors类中的所有静态方法
+  ```java
+    Long count = menu.stream().collect(counting());//菜单里有多少种菜
+    Optional<Dish> optionalDish = menu.stream().collect(maxBy(comparingInt(Dish::getCalories)));//菜单里热量最高的菜
+    menu.stream().collect(summingInt(Dish::getCalories));//菜单列表的总热量
+    menu.stream().collect(averagingInt(Dish::getCalories));//菜单列表的热量平均值
+    IntSummaryStatistics intSummaryStatistics = menu.stream().collect(summarizingInt(Dish::getCalories));//一次迭代,统计出菜单列表元素个数, 菜肴热量最大值、最小值、平均值、总和
+    System.out.println(intSummaryStatistics.toString()); //result: IntSummaryStatistics{count=9, sum=4200, min=120, average=466.666667, max=800}
+    
+    String names = menu.stream().map(Dish::getName).collect(joining(","));//连接字符串
+    menu.stream().collect(reducing(0, Dish::getCalories, Integer::sum));//菜单列表的总热量
+  ```
+  - 

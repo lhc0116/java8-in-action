@@ -12,6 +12,7 @@ public class Transaction {
     private Trader trader;
     private int year;
     private int value;
+    private String currency;
 
     public Transaction(Trader trader, int year, int value) {
         this.trader = trader;
