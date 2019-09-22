@@ -28,4 +28,9 @@ public class Dish {
     public enum CaloricLevel {
         DIET, NORMAL, FAT
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

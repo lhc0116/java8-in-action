@@ -8,6 +8,7 @@ import com.java8.action.entity.Transaction;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 import static com.java8.action.entity.Dish.CaloricLevel.*;
 import static java.util.Comparator.comparingInt;
@@ -50,7 +51,7 @@ public class ChapterTest6 {
 	}
 
 	/**
-	 * 流的分组和分区操作
+	 * 流的分组和分区操作 groupingBy(), partitioningBy()
 	 */
 	@Test
 	public void test2() {
@@ -66,13 +67,29 @@ public class ChapterTest6 {
 		Map<Type, Long> map3 = menu.stream().collect(groupingBy(Dish::getType, counting()));//result: {FISH=2, OTHER=4, MEAT=3}
 		//菜单中每种类型热量最高的菜肴
 		Map<Type, Optional<Dish>> map4 = menu.stream().collect(groupingBy(Dish::getType, maxBy(comparingInt(Dish::getCalories))));//result:{FISH=Optional[salmon], OTHER=Optional[pizza], MEAT=Optional[pork]}
-		//上面分组操作后的Optional<Dish>是一定有值的,所以这个Optional包装没什么意义,可以通过下面这方式把Dish直接提取出来
+		//上面分组操作后的Optional<Dish>是一定有值的,所以这个Optional包装没什么意义,可以通过collectingAndThen()方法把Dish直接提取出来
 		Map<Type, Dish> map5 = menu.stream().collect(groupingBy(Dish::getType, collectingAndThen(maxBy(comparingInt(Dish::getCalories)), Optional::get)));//result:{FISH=Optional[salmon], OTHER=Optional[pizza], MEAT=Optional[pork]}
+		//根据菜肴类型分组,获取所有的菜肴名称 result: {MEAT=[chicken, beef, pork], OTHER=[season fruit, pizza, rice, french fries], FISH=[salmon, prawns]}
+		LinkedHashMap<Type, Set<String>> map6 = menu.stream().collect(groupingBy(Dish::getType, LinkedHashMap::new, mapping(Dish::getName, toSet())));
+		//在上面的例子中, toSet()方法生成的收集器我们是无法指定Set类型的, 可以使用toCollection()工厂方法来指定集合类型, 比如LInkedHashSet
+		LinkedHashMap<Type, LinkedHashSet<String>> menu7 = menu.stream().collect(groupingBy(Dish::getType, LinkedHashMap::new, mapping(Dish::getName, toCollection(LinkedHashSet::new))));
 
+		//按菜肴是否素食进行分区 result: {false=[chicken, salmon, prawns, beef, pork], true=[rice, french fries, pizza, season fruit]}
+		Map<Boolean, HashSet<Dish>> map9 = menu.stream().collect(partitioningBy(Dish::isVegetarian, toCollection(HashSet::new)));
+		//获取素食和非素食中热量最高的菜肴 result: {false=pork, true=pizza}
+		Map<Boolean, Dish> map10 = menu.stream().collect(partitioningBy(Dish::isVegetarian, collectingAndThen(maxBy(comparingInt(Dish::getCalories)), Optional::get)));
+		//将前20个自然数按质数和非质数分区
+		Map<Boolean, List<Integer>> map11 = IntStream.rangeClosed(1, 20).boxed().collect(partitioningBy(this::isPrime));
+	}
+
+	private boolean isPrime(int candidate) {
+		int sqrt = (int) Math.sqrt(candidate);
+		return IntStream.rangeClosed(2, sqrt).noneMatch(i -> candidate % i == 0);
 	}
 
 	/**
 	 * 规约和汇总操作
+	 * @see java.util.stream.Collectors
 	 */
 	@Test
 	public void test1() {
