@@ -1,4 +1,9 @@
-[TOC]
+- [chapter 1](#chapter 1)
+- [chapter 2](#chapter-2)
+- [chapter 3](#chapter-3)
+- [chapter 4](#chapter-4)
+- [chapter 5](#chapter-5)
+- [chapter 6](#chapter-6)
 
 ### chapter 1
   - 函数式编程的两个核心思想：将方法和Lambda作为一等值,以及在没有可变共享状态时,函数或方法可以有效、安全的并行执行。
