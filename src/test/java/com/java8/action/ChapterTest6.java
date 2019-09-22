@@ -1,5 +1,6 @@
 package com.java8.action;
 
+import com.java8.action.collector.PrimeCollector;
 import com.java8.action.collector.ToListCollector;
 import com.java8.action.entity.Dish;
 import com.java8.action.entity.Dish.CaloricLevel;
@@ -53,13 +54,14 @@ public class ChapterTest6 {
 
 	/**
 	 * 自定义收集器
+	 * @see ToListCollector
 	 */
 	@Test
 	public void test3() {
 		List<Dish> list = menu.stream().collect(new ToListCollector<Dish>());//粗糙的自定义收集器
-		//对于IDENTITY_FINISH这种标识恒等函数的收集操作,可以用Stream中的重载方法collect()实现同样的效果
+		//对于IDENTITY_FINISH这种最终函数是恒等函数的收集操作,可以用Stream中的重载方法collect()实现同样的效果
 		HashSet<Object> hashset = menu.stream().collect(HashSet::new, HashSet::add, HashSet::addAll);
-		System.out.println(hashset);
+		//自定义一个收集器，对前面的质数和非质数分区进行优化： 假定已经取出来的质数列表是有序的，将列表中所有小于被测数平方根的质数用于测试，如果被测数能被整除，则不是质数。具体的实现方式见6.6节
 	}
 
 	/**
@@ -91,7 +93,7 @@ public class ChapterTest6 {
 		//获取素食和非素食中热量最高的菜肴 result: {false=pork, true=pizza}
 		Map<Boolean, Dish> map10 = menu.stream().collect(partitioningBy(Dish::isVegetarian, collectingAndThen(maxBy(comparingInt(Dish::getCalories)), Optional::get)));
 		//将前20个自然数按质数和非质数分区
-		Map<Boolean, List<Integer>> map11 = IntStream.rangeClosed(1, 20).boxed().collect(partitioningBy(this::isPrime));
+		Map<Boolean, List<Integer>> map11 = IntStream.rangeClosed(2, 20).boxed().collect(partitioningBy(this::isPrime));
 	}
 
 	private boolean isPrime(int candidate) {

@@ -4,6 +4,7 @@
 - [chapter 4](#chapter-4)
 - [chapter 5](#chapter-5)
 - [chapter 6](#chapter-6)
+- [chapter 7](#chapter-7)
 
 ### chapter 1
   - 函数式编程的两个核心思想：将方法和Lambda作为一等值,以及在没有可变共享状态时,函数或方法可以有效、安全的并行执行。
@@ -179,5 +180,11 @@
         return IntStream.rangeClosed(2, sqrt).noneMatch(i -> candidate % i == 0);
     }
   ```
-  - 
-  
+  - 自定义收集器的两种方式
+    - 实现Collector接口
+    - 使用Stream类的重载方法collect(),这种方式只有`IDENTITY_FINISH`特征(即对结果容器做最终类型转换的finisher()方法返回的是一个恒等函数)的收集器才能使用。
+  ```java
+    collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
+  ```
+### chapter 7
+  - 测试
