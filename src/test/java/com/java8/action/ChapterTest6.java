@@ -1,5 +1,6 @@
 package com.java8.action;
 
+import com.java8.action.collector.ToListCollector;
 import com.java8.action.entity.Dish;
 import com.java8.action.entity.Dish.CaloricLevel;
 import com.java8.action.entity.Dish.Type;
@@ -48,6 +49,17 @@ public class ChapterTest6 {
 				new Transaction(mario, 2012, 700),
 				new Transaction(alan, 2012, 950)
 		);
+	}
+
+	/**
+	 * 自定义收集器
+	 */
+	@Test
+	public void test3() {
+		List<Dish> list = menu.stream().collect(new ToListCollector<Dish>());//粗糙的自定义收集器
+		//对于IDENTITY_FINISH这种标识恒等函数的收集操作,可以用Stream中的重载方法collect()实现同样的效果
+		HashSet<Object> hashset = menu.stream().collect(HashSet::new, HashSet::add, HashSet::addAll);
+		System.out.println(hashset);
 	}
 
 	/**
