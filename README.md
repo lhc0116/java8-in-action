@@ -189,7 +189,10 @@
 ### chapter 7
   - 调用流的`sequential()`或`parallel()`方法可以指定流顺序/并行执行，其底层原理就是改变一个`记录是否并行执行的标志的布尔变量`的值来实现的。
   - 并行流内部使用了默认的 ForkJoinPool 分支/合并框架，它默认的线程数就是当前机器的处理器数量，这个值是由`Runtime.getRuntime().availableProcessors()`得到的，可以通过下面的方式改变线程池的大小，但不建议，因为一旦线程数超过了处理器的数量，就可能会引发并发访问的共享资源竞争问题。
-  > System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "128");//全局设置
+  ```java
+    System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "128");//全局设置
+  ```
   - 通过测试原始迭代、并行流、顺序流的几种方式发现，在某些场景下如果不恰当的使用了并行流，反而会大大降低性能，比如Stream类的iterate()方法生成的流使用并行反而会增加额外开销。
-  > 因为每次应用iterate()方法时都要依赖前一次应用的结果，因此无法有效的把流划分为多个小块来并行处理，这里把流标记成并行，实则给原本的顺序处理增加了额外的开销
-  
+    > 因为每次应用iterate()方法时都要依赖前一次应用的结果，因此无法有效的把流划分为多个小块来并行处理，这里把流标记成并行，实则给原本的顺序处理增加了额外的开销
+  - 类似limit和findFirst这种依赖于元素顺序的操作，在并行流上的性能一般会比顺序流差。
+  - 
