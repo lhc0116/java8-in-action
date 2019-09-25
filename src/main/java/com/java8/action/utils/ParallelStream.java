@@ -12,6 +12,7 @@ public class ParallelStream {
         return LongStream.iterate(1, i -> i + 1)
                 .limit(n)
                 .sum();
+//        return LongStream.rangeClosed(1, n).reduce(0, Long::sum);//4毫秒
     }
 
     public static long iterativeSum(long n) {
@@ -25,7 +26,8 @@ public class ParallelStream {
     public static long parallelSum(long n) {
         return LongStream.iterate(1, i -> i + 1)
                 .limit(n)
-                //.parallel()
+                .parallel()
                 .sum();
+//        return LongStream.rangeClosed(1, n).parallel().reduce(0, Long::sum);//2毫秒
     }
 }
