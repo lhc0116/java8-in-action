@@ -1,11 +1,14 @@
 package com.java8.action;
 
+import com.java8.action.entity.WordCounter;
+import com.java8.action.spliterator.WordCounterSpliterator;
 import com.java8.action.utils.ParallelStream;
 import org.junit.Test;
 
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * @author li huaichuan
@@ -15,7 +18,30 @@ public class ChapterTest7 {
 
     @Test
     public void test2() {
+        String str = " Nel mezzo del cammin di nostra vita mi ritrovai in una selva oscura ché la dritta via era smarrita ";
+        System.out.println(this.countIteratively(str));
 
+        Stream<Character> characterStream = IntStream.range(0, str.length()).mapToObj(str::charAt);
+        WordCounter count = characterStream.parallel().reduce(new WordCounter(0, true), WordCounter::accumulate, WordCounter::combine);
+        System.out.println(count.getCount());//这里使用并行流导致结果出错，因为他可能在拆分子流的时候将一个单词拆分成两个单词
+        WordCounter counter = StreamSupport.stream(new WordCounterSpliterator(str), true).parallel().reduce(new WordCounter(0, true), WordCounter::accumulate, WordCounter::combine);
+        System.out.println(counter.getCount());//使用自定义的Spliterator，只有在遍历到单词之间的空格时才会去拆分成多个子流
+    }
+
+    private int countIteratively(String str) {
+        int count = 0;
+        boolean lastSpace = true;
+        for (char c : str.toCharArray()) {
+            if(Character.isWhitespace(c)) {
+                lastSpace = true;
+            } else {
+                if(lastSpace) {
+                    count++;
+                }
+                lastSpace = false;
+            }
+        }
+        return count;
     }
 
     /**
