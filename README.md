@@ -198,4 +198,17 @@
   - 类似limit和findFirst这种依赖于元素顺序的操作，在并行流上的性能一般会比顺序流差。
   - Spliterator可分迭代器的的工作原理，它定义了并行流要如何的拆分它要遍历的数据源。
 ### chapter 8
-  - 1
+  - 在匿名类中，this代表的是类自身，但是在Lambda中，它代表的是包含类。其次，匿名类可以屏蔽包含类的变量，而Lambda表达式则不能(即Lambbda表达式内外不能出现同一名称的变量)。
+  - 在涉及重载的上下文里, 将匿名类转换为Lambda表达式可能导致最终的代码更加晦涩(比如重载的方法入参具有相同的函数描述符), 可以使用显式的类型转换来解决这个问题。
+  ```java
+    @Test
+    public void test2() {
+        doSomething((Task) () -> System.out.println());//Task和Runnable接口具有相同的方法签名 () -> void，需显式类型转换
+    }
+
+    @FunctionalInterface
+    interface Task {
+        void execute();
+    }
+  ```
+  - 
