@@ -6,6 +6,8 @@
 - [chapter 6](#chapter-6)
 - [chapter 7](#chapter-7)
 - [chapter 8](#chapter-8)
+- [chapter 9](#chapter-9)
+- [chapter 10](#chapter-10)
 
 ### chapter 1
   - 函数式编程的两个核心思想：将方法和Lambda作为一等值,以及在没有可变共享状态时,函数或方法可以有效、安全的并行执行。
@@ -211,4 +213,23 @@
         void execute();
     }
   ```
-  - 
+  - 使用Lambda表达式重构常用的设计模式, 如策略模式、模板模式、责任链模式、工厂模式.
+  - 通过Stream类的peek()方法可以查看Stream流水线操作中每一步的输出结果
+### chapter 9
+  - Java8引入的新功能: 接口中可以声明默认方法和静态方法.
+  ```java
+    //default关键字修饰的默认方法
+    default Comparator<T> thenComparingInt(ToIntFunction<? super T> keyExtractor) {
+        return thenComparing(comparingInt(keyExtractor));
+    }
+    //Comparator接口中的静态方法
+    public static <T extends Comparable<? super T>> Comparator<T> naturalOrder() {
+        return (Comparator<T>) Comparators.NaturalOrderComparator.INSTANCE;
+    }
+  ```
+  - 接口默认方法带来的多继承问题, 即如果一个类使用相同的函数签名从多个地方（比如另一个类或接口）继承了方法, 通过三条规则可以进行判断:
+    - 类中的方法优先级最高。类或父类中声明的方法的优先级高于任何声明为默认方法的优先级。
+    - 如果无法依据第一条进行判断，那么子接口的优先级更高：函数签名相同时，优先选择有最具体实现的默认方法的接口，即如果B继承了A，那么B就比A更加具体。
+    - 最后, 如果还是无法判断, 继承了多个接口的类必须通过显式覆盖和调用期望的方法, 显式地选择使用哪一个默认方法的实现(调用语法: `接口名.super.默认方法名`)。
+### chapter 10
+  - 1
