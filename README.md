@@ -237,7 +237,7 @@
   - Optional类的方法
   
     |方法|描述|
-    |:---:|:---:|
+    |:---|:---|
     | empty| 返回一个空的 Optional 实例|
     | filter| 如果值存在并且满足提供的谓词,就返回包含该值的 Optional 对象;否则返回一个空的 Optional 对象|
     | flatMap| 如果值存在,就对该值执行提供的 mapping 函数调用,返回一个 Optional 类型的值,否则就返回一个空的 Optional 对象|
