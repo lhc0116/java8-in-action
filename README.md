@@ -8,6 +8,8 @@
 - [chapter 8](#chapter-8)
 - [chapter 9](#chapter-9)
 - [chapter 10](#chapter-10)
+- [chapter 11](#chapter-11)
+- [chapter 12](#chapter-12)
 
 ### chapter 1
   - 函数式编程的两个核心思想：将方法和Lambda作为一等值,以及在没有可变共享状态时,函数或方法可以有效、安全的并行执行。
@@ -232,4 +234,30 @@
     - 如果无法依据第一条进行判断，那么子接口的优先级更高：函数签名相同时，优先选择有最具体实现的默认方法的接口，即如果B继承了A，那么B就比A更加具体。
     - 最后, 如果还是无法判断, 继承了多个接口的类必须通过显式覆盖和调用期望的方法, 显式地选择使用哪一个默认方法的实现(调用语法: `接口名.super.默认方法名`)。
 ### chapter 10
+  - Optional类的方法
+  
+    |方法|描述|
+    |:---:|:---:|
+    | empty| 返回一个空的 Optional 实例|
+    | filter| 如果值存在并且满足提供的谓词,就返回包含该值的 Optional 对象;否则返回一个空的 Optional 对象|
+    | flatMap| 如果值存在,就对该值执行提供的 mapping 函数调用,返回一个 Optional 类型的值,否则就返回一个空的 Optional 对象|
+    | get| 如果该值存在,将该值用 Optional 封装返回,否则抛出一个 NoSuchElementException 异常|
+    | ifPresent| 如果值存在,就执行使用该值的方法调用,否则什么也不做|
+    | isPresent|如果值存在就返回 true ,否则返回 false |
+    | map|如果值存在,就对该值执行提供的 mapping 函数调用,返回一个 Optional 类型的值,否则就返回一个空的 Optional 对象 |
+    | of| 将指定值用 Optional 封装之后返回,如果该值为 null ,则抛出一个 NullPointerException 异常|
+    | ofNullable| 将指定值用 Optional 封装之后返回,如果该值为 null ,则返回一个空的 Optional 对象|
+    | orElse| 如果有值则将其返回,否则返回一个默认值|
+    | orElseGet| 如果有值则将其返回,否则返回一个由指定的 Supplier 接口生成的值|
+    | orElseThrow| 如果有值则将其返回,否则抛出一个由指定的 Supplier 接口生成的异常|
+  - Optional 的基础类型(OptionalXxx)不推荐使用, 因为基础类型的 Optional 不支持 map、flatMap 以及 filter 方法.
+### chapter 11
   - 1
+  
+  
+  
+  
+  
+### chapter 12
+
+
