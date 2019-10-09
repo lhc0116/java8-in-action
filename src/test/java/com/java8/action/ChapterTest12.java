@@ -6,6 +6,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 
 import static org.junit.Assert.assertTrue;
 
@@ -15,13 +17,66 @@ import static org.junit.Assert.assertTrue;
  */
 public class ChapterTest12 {
 
+    /**
+     * 日期时间格式化
+     * @see DateTimeFormatter
+     */
+    @Test
+    public void test6() {
+        //日期转字符串
+        LocalDate ld = LocalDate.of(2019, 10, 7);
+        String s1 = ld.format(DateTimeFormatter.BASIC_ISO_DATE);//20191007
+        String s2 = ld.format(DateTimeFormatter.ISO_LOCAL_DATE);//2019-10-07
+        //字符串转日期
+        LocalDateTime ld1 = LocalDateTime.parse("2019-10-07 22:22:22.555", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+        System.out.println();
+
+    }
+
+    /**
+     * 将日期调整到下个工作日、本月的最后的一天、今年的第一天，类似操作
+     * @see TemporalAdjuster
+     */
+    @Test
+    public void test5() {
+        LocalDate ld = LocalDate.of(2019, 10, 7);
+        LocalDate ld1 = ld.with(TemporalAdjusters.next(DayOfWeek.FRIDAY));//2019-10-11
+        LocalDate ld2 = ld.with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));//2019-10-07
+        LocalDate ld3 = ld.with(TemporalAdjusters.firstDayOfNextMonth());//2019-11-01
+
+        //自定义TemporalAdjuster, 来计算下一个工作日所在的日期
+        LocalDate ld4 = LocalDate.of(2019, 10, 11).with(temporal -> {
+            DayOfWeek now = DayOfWeek.of(temporal.get(ChronoField.DAY_OF_WEEK));
+            long dayToAdd = now.equals(DayOfWeek.FRIDAY) ? 3L : now.equals(DayOfWeek.SATURDAY) ? 2L : 1L;
+            return temporal.plus(dayToAdd, ChronoUnit.DAYS);
+        });//2019-10-14
+        //对于经常复用的相同操作，可以将逻辑封装一个类中
+        TemporalAdjuster temporalAdjuster = TemporalAdjusters.ofDateAdjuster(temporal -> {
+            DayOfWeek now = DayOfWeek.of(temporal.get(ChronoField.DAY_OF_WEEK));
+            long dayToAdd = now.equals(DayOfWeek.FRIDAY) ? 3L : now.equals(DayOfWeek.SATURDAY) ? 2L : 1L;
+            return temporal.plus(dayToAdd, ChronoUnit.DAYS);
+        });
+    }
+
+    /**
+     * LocalDate、LocalTime、LocalDateTime、Instant类都实现了Temporal接口，有很多通用的处理日期和时间的方法，比如plus(), minus(), with()
+     */
     @Test
     public void test4() {
         LocalDate ld = LocalDate.of(2019, 10, 7);
-        //修改时间对象的属性值,返回一个新的对象
+        //修改时间对象的某个属性值,返回一个新的对象
         LocalDate ld2 = ld.withDayOfYear(365);//2019-12-31
         LocalDate ld3 = ld.withDayOfMonth(18);//2019-10-18
         LocalDate ld4 = ld.with(ChronoField.MONTH_OF_YEAR, 8);//2019-08-07
+        //对时间对象进行加减运算
+        LocalDate ld5 = ld.plusWeeks(2L);//2019-10-21
+        LocalDate ld6 = ld.minusYears(9L);//2010-10-07
+        LocalDate ld7 = ld.plus(Period.ofMonths(2));//2019-12-07
+        LocalDate ld8 = ld.plus(2L, ChronoUnit.MONTHS);//2019-12-07
+
+        LocalTime lt = LocalTime.parse("10:10:10.888");
+        LocalTime lt1 = lt.plus(Duration.ofHours(2L));//12:10:10.888
+        LocalTime lt2 = lt.plus(120L, ChronoUnit.MINUTES);//12:10:10.888
         System.out.println();
     }
 
