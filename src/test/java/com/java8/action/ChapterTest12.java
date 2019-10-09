@@ -16,6 +16,20 @@ import static org.junit.Assert.assertTrue;
 public class ChapterTest12 {
 
     @Test
+    public void test4() {
+        LocalDate ld = LocalDate.of(2019, 10, 7);
+        //修改时间对象的属性值,返回一个新的对象
+        LocalDate ld2 = ld.withDayOfYear(365);//2019-12-31
+        LocalDate ld3 = ld.withDayOfMonth(18);//2019-10-18
+        LocalDate ld4 = ld.with(ChronoField.MONTH_OF_YEAR, 8);//2019-08-07
+        System.out.println();
+    }
+
+    /**
+     * @see Duration
+     * @see Period
+     */
+    @Test
     public void test3() {
         Duration d1 = Duration.between(LocalDateTime.of(2019, 10, 7, 15, 55, 55, 888), LocalDateTime.now());
         Duration d2 = Duration.between(LocalTime.of(17, 55, 10), LocalTime.now());
