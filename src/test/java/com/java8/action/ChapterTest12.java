@@ -18,6 +18,26 @@ import static org.junit.Assert.assertTrue;
 public class ChapterTest12 {
 
     /**
+     * @see ZoneId 老版本的TimeZone的替代品
+     * @see ZonedDateTime 代表了相对于指定时区的时间点
+     */
+    @Test
+    public void test7() {
+        //LocalDate、LocalDateTime、Instant 转 ZonedDateTime
+        ZonedDateTime zdt1 = LocalDate.of(2019, 10, 7).atStartOfDay(ZoneId.systemDefault());
+        ZonedDateTime zdt2 = LocalDateTime.of(2019, 10, 7, 15, 55, 55, 888).atZone(ZoneId.of("Asia/Shanghai"));
+        ZonedDateTime zdt3 = Instant.now().atZone(ZoneId.of("Asia/Yerevan"));
+
+        //Instant转LocalDateTime
+        LocalDateTime ldt1 = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
+        //下面的两个栗子介绍了ZoneOffset，他是利用和 UTC/格林尼治时间的固定偏差计算时区，但不推荐使用，因为ZoneOffset并未考虑任何夏令时的影响
+        LocalDateTime ldt2 = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.of("+8"));
+        //LocalDateTime转Instant
+        Instant instant = LocalDateTime.of(2019, 10, 7, 15, 55, 55).toInstant(ZoneOffset.of("+4"));
+        System.out.println();
+    }
+
+    /**
      * 日期时间格式化
      * @see DateTimeFormatter
      */
@@ -30,7 +50,6 @@ public class ChapterTest12 {
         //字符串转日期
         LocalDateTime ld1 = LocalDateTime.parse("2019-10-07 22:22:22.555", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
         System.out.println();
-
     }
 
     /**
@@ -106,6 +125,7 @@ public class ChapterTest12 {
 
     /**
      * 计算机角度的日期和时间格式 instant
+     * Instant对时间的建模方式是以UTC时区的1970年1月1日午夜时分开始所经历的秒数进行计算，它不包含时区信息
      */
     @Test
     public void test2() {

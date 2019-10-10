@@ -259,5 +259,13 @@
   
   
 ### chapter 12
+  - Java8之后，新的日期和时间API，类统一被final修饰，解决了老版本的线程不安全问题，比如Calendar日历类
+  - 使用静态工厂方法创建LocalDate和LocalTime,LocalDateTime, 以及它们之间的互相转换
+  - Instant对时间的建模方式是以UTC时区的1970年1月1日午夜时分开始所经历的秒数进行计算，它不包含时区信息. Instant类是为了方便计算机处理日期和时间而设计的
+  - Duration对象用秒和纳秒来衡量时间的长短，如果想要对多个时间对象进行日期运算，可以用Period
+  - LocalDate、LocalTime、LocalDateTime、Instant类都实现了Temporal接口，有很多通用的处理日期和时间的方法，比如plus(), minus(), with()
+  - TemporalAdjuster的使用
+  - 使用DateTimeFormatter进行可定制的日期时间格式化
+  - ZoneId时区的介绍
 
 
