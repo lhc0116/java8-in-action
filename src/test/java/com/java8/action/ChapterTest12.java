@@ -129,8 +129,8 @@ public class ChapterTest12 {
      */
     @Test
     public void test2() {
-        assertTrue(Instant.ofEpochSecond(3).getEpochSecond() == Instant.ofEpochSecond(2, 1_000_000_000).getEpochSecond());
-        assertTrue(Instant.ofEpochSecond(4, -1_000_000_000).getEpochSecond() == Instant.ofEpochSecond(2, 1_000_000_000).getEpochSecond());
+        assertTrue(Instant.ofEpochSecond(3).getNano() == Instant.ofEpochSecond(2, 1_000_000_000).getNano());
+        assertTrue(Instant.ofEpochSecond(4, -1_000_000_000).getNano() == Instant.ofEpochSecond(2, 1_000_000_000).getNano());
     }
 
     /**

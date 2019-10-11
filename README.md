@@ -263,9 +263,43 @@
   - 使用静态工厂方法创建LocalDate和LocalTime,LocalDateTime, 以及它们之间的互相转换
   - Instant对时间的建模方式是以UTC时区的1970年1月1日午夜时分开始所经历的秒数进行计算，它不包含时区信息. Instant类是为了方便计算机处理日期和时间而设计的
   - Duration对象用秒和纳秒来衡量时间的长短，如果想要对多个时间对象进行日期运算，可以用Period
+  ```java
+    Duration d1 = Duration.between(LocalDateTime.of(2019, 10, 7, 15, 55, 55, 888), LocalDateTime.now());
+    Duration d2 = Duration.between(LocalTime.of(17, 55, 10), LocalTime.now());
+    Duration d3 = Duration.between(Instant.ofEpochMilli(1570544602000L), Instant.now());
+    System.out.println(d3.toHours());
+    //Duration对象用秒和纳秒来衡量时间的长短，所以入参不能使用LocalDate类型, 否则抛UnsupportedTemporalTypeException: Unsupported unit: Seconds
+    //Duration.between(LocalDate.of(2019, 10, 7), LocalDate.now());
+
+    //如果想要对多个时间对象进行日期运算，可以用Period
+    Period p1 = Period.between(LocalDate.of(2018, 8, 30), LocalDate.now());
+    System.out.println(p1.getYears() + "\t" + p1.getMonths() + "\t" + p1.getDays());
+    //工厂方法介绍
+    Duration threeMinutes = Duration.ofMinutes(3);
+    threeMinutes = Duration.of(3, ChronoUnit.MINUTES);
+    Period tenDays = Period.ofDays(10);
+    Period threeWeeks = Period.ofWeeks(3);
+    Period twoYearsSixMonthsOneDay = Period.of(2, 6, 1);
+  ```
   - LocalDate、LocalTime、LocalDateTime、Instant类都实现了Temporal接口，有很多通用的处理日期和时间的方法，比如plus(), minus(), with()
-  - TemporalAdjuster的使用
+  - TemporalAdjuster类提供了更多对日期定制化操作的功能, 诸如将日期调整到下个工作日、本月的最后的一天、今年的第一天。
   - 使用DateTimeFormatter进行可定制的日期时间格式化
+  ```java
+    //日期转字符串
+    LocalDate ld = LocalDate.of(2019, 10, 7);
+    String s1 = ld.format(DateTimeFormatter.BASIC_ISO_DATE);//20191007
+    String s2 = ld.format(DateTimeFormatter.ISO_LOCAL_DATE);//2019-10-07
+    //字符串转日期
+    LocalDateTime ld1 = LocalDateTime.parse("2019-10-07 22:22:22.555", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+  ```
   - ZoneId时区的介绍
+  ```java
+    //LocalDate、LocalDateTime、Instant 转 ZonedDateTime
+    ZonedDateTime zdt1 = LocalDate.of(2019, 10, 7).atStartOfDay(ZoneId.systemDefault());
+    ZonedDateTime zdt2 = LocalDateTime.of(2019, 10, 7, 15, 55, 55, 888).atZone(ZoneId.of("Asia/Shanghai"));
+    ZonedDateTime zdt3 = Instant.now().atZone(ZoneId.of("Asia/Yerevan"));
+    //Instant转LocalDateTime
+    LocalDateTime ldt1 = LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
+  ```
 
 
