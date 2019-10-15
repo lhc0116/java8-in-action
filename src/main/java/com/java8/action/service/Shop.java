@@ -11,12 +11,31 @@ import java.util.concurrent.Future;
  */
 public class Shop {
 
+	String name;
+
+	public Shop(String name) {
+		this.name = name;
+	}
+
 	public Future<Double> getPriceAsync(String product) {
-		CompletableFuture f = new CompletableFuture();
+		//这段代码和下面注释的部分是等效的. 即supplyAsync()提供了同样的错误管理机制来处理被调用者发生的异常
+		return CompletableFuture.supplyAsync(() -> {
+			int x = 1 / 0;
+			return this.calculatePrice(product);
+		});
+
+		/*CompletableFuture future = new CompletableFuture();
 		new Thread(() -> {
-			f.complete(calculatePrice(product));
+			try {
+				int x = 1/0;
+				double price = this.calculatePrice(product);
+				future.complete(price);
+			} catch (Exception e) {
+				//如果被调用方发生异常, 就将该异常通过CompletableFuture抛出给调用方
+				future.completeExceptionally(e);
+			}
 		}).start();
-		return f;
+		return future;*/
 	}
 
 	private double calculatePrice(String product) {
