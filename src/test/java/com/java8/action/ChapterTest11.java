@@ -29,6 +29,14 @@ public class ChapterTest11 {
 				new Shop("云门书屋"));
 	}
 
+	private Executor executor = Executors.newFixedThreadPool(Math.min(shops.size(), 100), r -> {
+		Thread thread = new Thread(r);
+		//守护线程不会组织程序的终止
+		thread.setDaemon(true);
+		return thread;
+	});
+
+
 	/**
 	 * 处理异步请求
 	 */
