@@ -1,5 +1,7 @@
 package com.java8.action.service;
 
+import lombok.Data;
+
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -9,6 +11,7 @@ import java.util.concurrent.Future;
  * @version 1.0
  * @date 2019/10/14
  */
+@Data
 public class Shop {
 
 	String name;
@@ -36,6 +39,10 @@ public class Shop {
 			}
 		}).start();
 		return future;*/
+	}
+
+	public double getPrice(String product) {
+		return calculatePrice(product) / 1000;
 	}
 
 	private double calculatePrice(String product) {
