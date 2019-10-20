@@ -252,12 +252,16 @@
     | orElseThrow| 如果有值则将其返回,否则抛出一个由指定的 Supplier 接口生成的异常|
   - Optional 的基础类型(OptionalXxx)不推荐使用, 因为基础类型的 Optional 不支持 map、flatMap 以及 filter 方法.
 ### chapter 11
-  - 1
-  
-  
-  
-  
-  
+  - 线程池大小与处理器的利用率之比可以使用公式 `Nthreads = NCPU * UCPU * (1 + W/C)` 进行估算
+    > - NCPU是处理器的核的数目，可以通过Runtime.getRuntime().availableProcessors()得到<br>
+    > - UCPU是期望的CPU利用率（该值应该介于0和1之间）<br>
+    > - W/C是等待时间与计算时间的比率
+  - 如果进行的是计算密集型的操作，并且没有I/O，那么推荐使用Stream接口，因为实现简单，同时效率也可能是最高的（如果所有的线程都是计算密集型的，那就没有必要创建比处理器核数更多的线程）
+  - 如果并行的工作单元还涉及等待I/O的操作（包括网络连接等待），那么使用CompletableFuture灵活性更好，可以根据公式 `Nthreads = NCPU * UCPU * (1 + W/C)` 设定需要使用的线程数。
+  - 将同步API的调用封装到一个CompletableFuture中，你能够以异步的方式使用其结果
+  - 如果异步任务之间相互独立(thenCombine)，或者它们之间某一些的结果是另一些的输入(thenCompose)，你可以将这些异步任务构造或者合并成一个
+  - 你可以为CompletableFuture注册一个回调函数，在Future执行完毕或者它们计算的结果可用时，针对性地执行一些处理操作(thenAccept,thenApply,thenRun)
+  - 你可以决定在什么时候结束程序的运行，是等待由CompletableFuture对象构成的列表中所有的对象都执行完毕(allOf)，还是只要其中任何一个首先完成(anyOf)就中止程序的运行
 ### chapter 12
   - Java8之后，新的日期和时间API，类统一被final修饰，解决了老版本的线程不安全问题，比如Calendar日历类
   - 使用静态工厂方法创建LocalDate和LocalTime,LocalDateTime, 以及它们之间的互相转换

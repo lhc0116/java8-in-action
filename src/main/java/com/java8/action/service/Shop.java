@@ -1,5 +1,6 @@
 package com.java8.action.service;
 
+import com.java8.action.consts.Discount;
 import lombok.Data;
 
 import java.util.Random;
@@ -15,9 +16,15 @@ import java.util.concurrent.Future;
 public class Shop {
 
 	String name;
+	boolean flag;
 
 	public Shop(String name) {
 		this.name = name;
+	}
+
+	public Shop(String name, boolean flag) {
+		this.name = name;
+		this.flag = flag;
 	}
 
 	public Future<Double> getPriceAsync(String product) {
@@ -41,18 +48,36 @@ public class Shop {
 		return future;*/
 	}
 
+	public String getPriceAndDiscount(String product) {
+		double price = calculatePrice(product) / 1000;
+		//随机生成一个折扣服务代码
+		Discount.Code code = Discount.Code.values()[new Random().nextInt(Discount.Code.values().length)];
+		return String.format("%s:%.2f:%s", this.name, price, code.name());
+	}
+
 	public double getPrice(String product) {
 		return calculatePrice(product) / 1000;
 	}
 
 	private double calculatePrice(String product) {
-		delay();
+		if (flag) randomDelay();
+		else delay();
 		return new Random().nextDouble() * product.charAt(0) + product.charAt(1);
 	}
 
 	public static void delay() {
 		try {
 			Thread.sleep(1000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void randomDelay() {
+		Random random = new Random();
+		int delay = 500 + random.nextInt(3000);
+		try {
+			Thread.sleep(delay);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
