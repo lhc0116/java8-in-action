@@ -14,6 +14,7 @@ public class WordCounterSpliterator implements Spliterator<Character> {
     @Override
     public boolean tryAdvance(Consumer<? super Character> action) {
         action.accept(string.charAt(currentChar++));
+        //如果还有字符要处理，则返回true
         return currentChar < string.length();
     }
 
@@ -21,6 +22,7 @@ public class WordCounterSpliterator implements Spliterator<Character> {
     public Spliterator<Character> trySplit() {
         int currentSize = string.length() - currentChar;
         if (currentSize < 10) {
+            //返回null表示要解析的string已经足够小，可以顺序处理，不用再继续分割了
             return null;
         }
         for (int splitPos = currentSize / 2 + currentChar; splitPos < string.length(); splitPos++) {
